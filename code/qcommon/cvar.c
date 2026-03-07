@@ -865,36 +865,65 @@ Appends lines containing "set variable value" for all variables
 with the archive flag set to qtrue.
 ============
 */
+static int CvarCompareName(const void *a, const void *b) {
+    const cvar_t *ca = *(const cvar_t **)a;
+    const cvar_t *cb = *(const cvar_t **)b;
+    return Q_stricmp(ca->name, cb->name);
+}
+
+
 void Cvar_WriteVariables(fileHandle_t f) {
-	cvar_t *var;
-	char buffer[1024];
+    cvar_t  *var;
+    cvar_t **sorted;
+    int      count, i;
+    char     buffer[1024];
 
-	for (var = cvar_vars; var; var = var->next) {
-		if (!var->name || Q_stricmp(var->name, "cl_cdkey") == 0)
-			continue;
+    count = 0;
+    for (var = cvar_vars; var; var = var->next) {
+        if (var->name
+            && Q_stricmp(var->name, "cl_cdkey") != 0
+            && (var->flags & CVAR_ARCHIVE))
+        {
+            count++;
+        }
+    }
 
-		if (var->flags & CVAR_ARCHIVE) {
-			// write the latched value, even if it hasn't taken effect yet
-			if (var->latchedString) {
-				if (strlen(var->name) + strlen(var->latchedString) + 10 > sizeof(buffer)) {
-					Com_Printf(S_COLOR_YELLOW "WARNING: value of variable "
-											  "\"%s\" too long to write to file\n",
-							   var->name);
-					continue;
-				}
-				Com_sprintf(buffer, sizeof(buffer), "seta %s \"%s\"\n", var->name, var->latchedString);
-			} else {
-				if (strlen(var->name) + strlen(var->string) + 10 > sizeof(buffer)) {
-					Com_Printf(S_COLOR_YELLOW "WARNING: value of variable "
-											  "\"%s\" too long to write to file\n",
-							   var->name);
-					continue;
-				}
-				Com_sprintf(buffer, sizeof(buffer), "seta %s \"%s\"\n", var->name, var->string);
-			}
-			FS_Write(buffer, strlen(buffer), f);
-		}
-	}
+    if (count == 0)
+        return;
+
+    sorted = (cvar_t **)Z_Malloc(count * sizeof(cvar_t *));
+
+    i = 0;
+    for (var = cvar_vars; var; var = var->next) {
+        if (var->name
+            && Q_stricmp(var->name, "cl_cdkey") != 0
+            && (var->flags & CVAR_ARCHIVE))
+        {
+            sorted[i++] = var;
+        }
+    }
+
+    qsort(sorted, count, sizeof(cvar_t *), CvarCompareName);
+
+    for (i = 0; i < count; i++) {
+        const char *value;
+
+        var   = sorted[i];
+        value = var->latchedString ? var->latchedString : var->string;
+
+        if (strlen(var->name) + strlen(value) + 10 > sizeof(buffer)) {
+            Com_Printf(S_COLOR_YELLOW "WARNING: value of variable "
+                                      "\"%s\" too long to write to file\n",
+                       var->name);
+            continue;
+        }
+
+        Com_sprintf(buffer, sizeof(buffer), "seta %s \"%s\"\n",
+                    var->name, value);
+        FS_Write(buffer, strlen(buffer), f);
+    }
+
+    Z_Free(sorted);
 }
 
 /*
