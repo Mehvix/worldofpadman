@@ -720,7 +720,7 @@ static void Controls_GetConfig(void) {
 	s_controls.invertmouse.curvalue = Controls_GetCvarValue("m_pitch") < 0;
 	s_controls.smoothmouse.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("m_filter"));
 	s_controls.alwaysrun.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("cl_run"));
-	s_controls.sensitivity.curvalue = UI_ClampCvar(2, 30, Controls_GetCvarValue("sensitivity"));
+	s_controls.sensitivity.curvalue = UI_ClampCvar(0.1f, 10, Controls_GetCvarValue("sensitivity"));
 	s_controls.maccelfactor.curvalue = UI_ClampCvar(0, 10, Controls_GetCvarValue("cl_mouseAccel"));
 	s_controls.maccelstyle.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("cl_mouseAccelStyle"));
 	s_controls.macceloffset.curvalue = UI_ClampCvar(0.001f, 50000.0f, Controls_GetCvarValue("cl_mouseAccelOffset"));
@@ -1177,8 +1177,8 @@ static void Controls_MenuInit(void) {
 	s_controls.sensitivity.generic.name = "Mouse Sensitivity:";
 	s_controls.sensitivity.generic.id = ID_MOUSESPEED;
 	s_controls.sensitivity.generic.callback = Controls_MenuEvent;
-	s_controls.sensitivity.minvalue = 2;
-	s_controls.sensitivity.maxvalue = 30;
+	s_controls.sensitivity.minvalue = 0.1f;
+	s_controls.sensitivity.maxvalue = 10;
 	s_controls.sensitivity.generic.statusbar = Controls_StatusBar;
 
 	s_controls.maccelfactor.generic.type = MTYPE_SLIDER;
