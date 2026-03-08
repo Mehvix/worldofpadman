@@ -146,6 +146,7 @@ typedef struct {
 #define ID_MOUSEACCELFACTOR 67
 #define ID_MOUSEACCELSTYLE 68
 #define ID_MOUSEACCELOFFSET 69
+#define ID_FOV 70
 
 #define XPOSITION 630
 #define YPOSITION 180
@@ -173,6 +174,7 @@ typedef struct {
 	menuaction_s useitem;
 	menuaction_s dropCart;
 
+	menuslider_s fov;
 	menuslider_s sensitivity;
 	menuslider_s maccelfactor;
 	menuradiobutton_s maccelstyle;
@@ -308,6 +310,7 @@ static configcvar_t g_configcvars[] =
 {
 	{"cl_run", 0, 0},
 	{"m_pitch",	0, 0},
+	{"cg_fov", 0, 0},
 	{"sensitivity", 0, 0},
 	{"cl_mouseAccel", 0, 0},
 	{"cl_mouseAccelStyle", 0, 0},
@@ -354,6 +357,7 @@ static menucommon_s *g_weapons_controls[] = {
 };
 
 static menucommon_s *g_looking_controls[] = {
+	(menucommon_s *)&s_controls.fov,
 	(menucommon_s *)&s_controls.sensitivity,
 	(menucommon_s *)&s_controls.maccelfactor,
 	(menucommon_s *)&s_controls.maccelstyle,
@@ -720,6 +724,7 @@ static void Controls_GetConfig(void) {
 	s_controls.invertmouse.curvalue = Controls_GetCvarValue("m_pitch") < 0;
 	s_controls.smoothmouse.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("m_filter"));
 	s_controls.alwaysrun.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("cl_run"));
+	s_controls.fov.curvalue = UI_ClampCvar(60, 103, Controls_GetCvarValue("cg_fov"));
 	s_controls.sensitivity.curvalue = UI_ClampCvar(0.1f, 10, Controls_GetCvarValue("sensitivity"));
 	s_controls.maccelfactor.curvalue = UI_ClampCvar(0, 10, Controls_GetCvarValue("cl_mouseAccel"));
 	s_controls.maccelstyle.curvalue = UI_ClampCvar(0, 1, Controls_GetCvarValue("cl_mouseAccelStyle"));
@@ -761,6 +766,7 @@ static void Controls_SetConfig(void) {
 
 	trap_Cvar_SetValue("m_filter", s_controls.smoothmouse.curvalue);
 	trap_Cvar_SetValue("cl_run", s_controls.alwaysrun.curvalue);
+	trap_Cvar_SetValue("cg_fov", s_controls.fov.curvalue);
 	trap_Cvar_SetValue("sensitivity", s_controls.sensitivity.curvalue);
 	trap_Cvar_SetValue("cl_mouseAccel", s_controls.maccelfactor.curvalue);
 	trap_Cvar_SetValue("cl_mouseAccelStyle", s_controls.maccelstyle.curvalue);
@@ -824,6 +830,7 @@ static void Controls_SetDefaults(void) {
 	s_controls.invertmouse.curvalue = Controls_GetCvarDefault("m_pitch") < 0;
 	s_controls.alwaysrun.curvalue = Controls_GetCvarDefault("cl_run");
 	s_controls.smoothmouse.curvalue = Controls_GetCvarDefault("m_filter");
+	s_controls.fov.curvalue = Controls_GetCvarDefault("cg_fov");
 	s_controls.sensitivity.curvalue = Controls_GetCvarDefault("sensitivity");
 	s_controls.maccelfactor.curvalue = Controls_GetCvarDefault("cl_mouseAccel");
 	s_controls.maccelstyle.curvalue = Controls_GetCvarDefault("cl_mouseAccelStyle");
@@ -1036,6 +1043,7 @@ static void Controls_MenuEvent(void *ptr, int event) {
 		}
 		break;
 
+	case ID_FOV:
 	case ID_FREELOOK:
 	case ID_MOUSESPEED:
 	case ID_MOUSEACCELFACTOR:
@@ -1171,6 +1179,15 @@ static void Controls_MenuInit(void) {
 	s_controls.back.height = 40;
 	s_controls.back.focuspic = BACK1;
 	s_controls.back.focuspicinstead = qtrue;
+
+	s_controls.fov.generic.type = MTYPE_SLIDER;
+	s_controls.fov.generic.flags = QMF_SMALLFONT;
+	s_controls.fov.generic.name = "FOV:";
+	s_controls.fov.generic.id = ID_FOV;
+	s_controls.fov.generic.callback = Controls_MenuEvent;
+	s_controls.fov.minvalue = 60;
+	s_controls.fov.maxvalue = 103;
+	s_controls.fov.generic.statusbar = Controls_StatusBar;
 
 	s_controls.sensitivity.generic.type = MTYPE_SLIDER;
 	s_controls.sensitivity.generic.flags = QMF_SMALLFONT;
@@ -1583,6 +1600,7 @@ static void Controls_MenuInit(void) {
 	Menu_AddItem(&s_controls.menu, &s_controls.chat);
 	Menu_AddItem(&s_controls.menu, &s_controls.misc);
 
+	Menu_AddItem(&s_controls.menu, &s_controls.fov);
 	Menu_AddItem(&s_controls.menu, &s_controls.sensitivity);
 	Menu_AddItem(&s_controls.menu, &s_controls.maccelfactor);
 	Menu_AddItem(&s_controls.menu, &s_controls.maccelstyle);
