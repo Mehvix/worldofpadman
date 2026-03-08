@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
-project(WorldOfPadman VERSION 1.7.1 LANGUAGES C ASM CXX)
+project(WorldOfPadman VERSION 1.7.0 LANGUAGES C ASM CXX)
+# TODO 1.7.1 (?)
 
 include(CheckSymbolExists)
 include(CheckCCompilerFlag)
@@ -172,7 +173,7 @@ function(compress_pk3 TARGET)
 	add_custom_target(pk3-${TARGET})
 	foreach (PK3DIR ${ARGN})
 		set(_dir ${PK3DIR}.pk3dir)
-		set(_file ${PK3DIR}-${CMAKE_PROJECT_VERSION}.pk3)
+		set(_file wop_${PK3DIR}_${CMAKE_PROJECT_VERSION}.pk3)
 		add_custom_command(
 			OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${_file}"
 			COMMAND "${ZIP}" ${ZIP_ARGS} "${CMAKE_CURRENT_BINARY_DIR}/${_file}" .

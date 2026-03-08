@@ -55,3 +55,6 @@ profile
 /woptest*
 /wopded.*
 /libSDL2*
+
+wop/wop_*.pk3
+wopkey
