@@ -825,6 +825,15 @@ static void ClientThink_real(gentity_t *ent) {
 	pm.gametype = g_gametype.integer;
 	Pmove(&pm);
 
+	// autobhop
+	if (g_autoBhop.integer) {
+		if ((pm.cmd.upmove >= 10) &&
+			(client->ps.groundEntityNum != ENTITYNUM_NONE) &&
+			(client->ps.pm_flags & PMF_JUMP_HELD)) {
+			client->ps.pm_flags &= ~PMF_JUMP_HELD;
+		}
+	}
+
 	// save results of pmove
 	if (ent->client->ps.eventSequence != oldEventSequence) {
 		ent->eventTime = level.time;

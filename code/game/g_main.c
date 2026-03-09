@@ -81,6 +81,7 @@ vmCvar_t pmove_fixed;
 vmCvar_t pmove_msec;
 vmCvar_t g_listEntity;
 vmCvar_t g_enableBreath;
+vmCvar_t g_autoBhop;
 
 vmCvar_t g_q3Items;
 vmCvar_t g_sky;
@@ -203,7 +204,11 @@ static cvarTable_t gameCvarTable[] = {
 	{NULL, PLAYERINFO_TEAM, PLAYERINFO_NONE, (CVAR_SERVERINFO | CVAR_ROM), 0, qfalse},
 	{NULL, PLAYERINFO_BOT, PLAYERINFO_NONE, (CVAR_SERVERINFO | CVAR_ROM), 0, qfalse},
 
-	{&g_logDamage, "g_logDamage", "0", CVAR_ARCHIVE, 0, qfalse}};
+	{&g_logDamage, "g_logDamage", "0", CVAR_ARCHIVE, 0, qfalse},
+
+	{&g_autoBhop, "g_autoBhop", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse}
+};
+
 
 static const int gameCvarTableSize = ARRAY_LEN(gameCvarTable);
 
