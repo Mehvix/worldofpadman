@@ -206,7 +206,7 @@ static cvarTable_t gameCvarTable[] = {
 
 	{&g_logDamage, "g_logDamage", "0", CVAR_ARCHIVE, 0, qfalse},
 
-	{&g_autoBhop, "g_autoBhop", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse}
+	{&g_autoBhop, "g_autoBhop", "0", CVAR_SERVERINFO, 0, qfalse} // CVAR_LATCH?
 };
 
 
