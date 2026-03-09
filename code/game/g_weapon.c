@@ -94,7 +94,11 @@ qboolean CheckGauntletAttack(gentity_t *ent) {
 	if (ent->client->ps.powerups[PW_BERSERKER])
 		s_quadFactor *= 10.0f; // one "berserker punchy" hit should kill
 
-	damage = (DAMAGE_PUNCHY * s_quadFactor);
+	if (g_instagib.integer)
+		damage = DAMAGE_IMPERIUS;
+	else
+		damage = (DAMAGE_PUNCHY * s_quadFactor);
+
 	G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_PUNCHY);
 
 	return qtrue;
@@ -129,7 +133,11 @@ static void Weapon_PumperFire(gentity_t *ent) {
 	vec3_t minPumper = {-4.0f, -4.0f, -4.0f};
 	vec3_t maxPumper = {4.0f, 4.0f, 4.0f};
 
-	damage = (DAMAGE_PUMPER * s_quadFactor);
+	if (g_instagib.integer)
+		damage = DAMAGE_IMPERIUS;
+	else
+		damage = (DAMAGE_PUMPER * s_quadFactor);
+	// INSTAGIB DMG
 
 	VectorMA(muzzle, RANGE_PUMPER, forward, end);
 

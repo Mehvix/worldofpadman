@@ -876,6 +876,16 @@ be on an entity that hasn't spawned yet.
 ============
 */
 qboolean G_SpawnItem(gentity_t *ent, const gitem_t *item) {
+	if ( g_instagib.integer ) {
+		if ( item->giType == IT_WEAPON ||
+		     item->giType == IT_AMMO ||
+		     item->giType == IT_HEALTH ||
+		     item->giType == IT_ARMOR ) {
+			G_FreeEntity( ent );
+			return qfalse;
+		}
+	}
+
 	G_SpawnFloat("random", "0", &ent->random);
 	G_SpawnFloat("wait", "0", &ent->wait);
 

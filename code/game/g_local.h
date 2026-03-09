@@ -943,6 +943,7 @@ extern vmCvar_t pmove_fixed;
 extern vmCvar_t pmove_msec;
 extern vmCvar_t g_enableBreath;
 extern vmCvar_t g_autoBhop;
+extern vmCvar_t g_instagib;
 
 extern vmCvar_t g_q3Items;
 extern vmCvar_t g_sky;

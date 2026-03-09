@@ -82,6 +82,7 @@ vmCvar_t pmove_msec;
 vmCvar_t g_listEntity;
 vmCvar_t g_enableBreath;
 vmCvar_t g_autoBhop;
+vmCvar_t g_instagib;
 
 vmCvar_t g_q3Items;
 vmCvar_t g_sky;
@@ -206,7 +207,8 @@ static cvarTable_t gameCvarTable[] = {
 
 	{&g_logDamage, "g_logDamage", "0", CVAR_ARCHIVE, 0, qfalse},
 
-	{&g_autoBhop, "g_autoBhop", "0", CVAR_SERVERINFO, 0, qfalse} // CVAR_LATCH?
+	{&g_autoBhop, "g_autoBhop", "0", CVAR_SERVERINFO, 0, qfalse}, // CVAR_LATCH?
+	{&g_instagib, "g_instagib", "0", CVAR_SERVERINFO, 0, qfalse} // CVAR_LATCH?
 };
 
 

@@ -1252,18 +1252,31 @@ void ClientSpawn(gentity_t *ent) {
 		client->ps.stats[STAT_WEAPONS] = (1 << weapon);
 		client->ps.ammo[weapon] = INFINITE;
 	} else {
-		// add normal wop weapons to client's inventory
-		client->ps.stats[STAT_WEAPONS] = (1 << WP_NIPPER);
-		if (g_gametype.integer == GT_TEAM) {
-			client->ps.ammo[WP_NIPPER] = 50;
-		} else {
+		if ( g_instagib.integer ) {
+			client->ps.stats[STAT_WEAPONS] = (1 << WP_PUMPER);
+			client->ps.stats[STAT_WEAPONS] |= (1 << WP_PUNCHY);
+			// ===
+			// we have to do this o/w `Error: weapon number (0) out of range (32)`
+			// also bots strangely prefer nipper
+			client->ps.stats[STAT_WEAPONS] |= (1 << WP_NIPPER);
 			client->ps.ammo[WP_NIPPER] = 100;
+			// ===
+			client->ps.ammo[WP_PUMPER] = INFINITE;
+			client->ps.ammo[WP_PUNCHY] = -1;
+			client->ps.weapon = WP_PUMPER;
+		} else {
+			// add normal wop weapons to client's inventory
+			client->ps.stats[STAT_WEAPONS] = (1 << WP_NIPPER);
+			if (g_gametype.integer == GT_TEAM) {
+				client->ps.ammo[WP_NIPPER] = 50;
+			} else {
+				client->ps.ammo[WP_NIPPER] = 100;
+			}
+
+			client->ps.stats[STAT_WEAPONS] |= (1 << WP_PUNCHY);
+			client->ps.ammo[WP_PUNCHY] = -1;
 		}
-
-		client->ps.stats[STAT_WEAPONS] |= (1 << WP_PUNCHY);
-		client->ps.ammo[WP_PUNCHY] = -1;
 	}
-
 	// client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
 	// in SYC gametypes, add spraypistol to inventory
